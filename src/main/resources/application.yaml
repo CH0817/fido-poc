@@ -1,0 +1,11 @@
+server:
+  servlet-path: /*
+spring:
+  thymeleaf:
+    cache: false
+    mode: LEGACYHTML5
+fido:
+  url:  https://tws-fido.wisecure-tech.com:8443
+  headers:
+    rp_domain_id: 1
+    Protocol: FIDO2_0

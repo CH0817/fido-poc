@@ -1,5 +1,12 @@
 server:
   servlet-path: /*
+  port: 9002
+  ssl:
+    enabled: true
+    key-password: changeit
+    key-store-password: changeit
+    key-store: classpath:_wildcard.transglobe.com.tw+5.p12
+    key-store-type: PKCS12
 spring:
   thymeleaf:
     cache: false

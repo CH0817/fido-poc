@@ -1,16 +1,36 @@
 function login() {
-    // $.ajax({
-    //     url: '/fido/preauthenticate',
-    //     method: 'post',
-    //     headers: {'Content-Type': 'application/json'},
-    //     dataType: 'json',
-    //     data: JSON.stringify({username: $('#username').val()}),
-    //     success: function (data) {
-    //         navigator.credentials.get({publicKey: convertArrayBuffer(data)})
-    //             .then(newCredentialInfo => authenticate(newCredentialInfo))
-    //             .catch(error => console.error(error));
-    //     }
-    // });
+    $.ajax({
+        url: '/fido/preauthenticate',
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        dataType: 'json',
+        data: JSON.stringify({username: $('#username').val()}),
+        success: function (response) {
+            if (response.code === '200') {
+                const options = response.data;
+                const publicKeyOptions = {
+                    challenge: base64UrlToArrayBuffer(options.challenge),
+                    rpId: options.rpId,
+                    allowCredentials: options.allowCredentials.map(c => {
+                        return {
+                            id: base64UrlToArrayBuffer(c.id),
+                            type: c.type
+                        }
+                    }),
+                    timeout: options.timeout,
+                    userVerification: options.userVerification
+                }
+
+                const publicKey = {
+                    publicKey: publicKeyOptions
+                }
+
+                navigator.credentials.get(publicKey)
+                    .then(credential => authenticate(credential))
+                    .catch(error => console.error(error));
+            }
+        }
+    });
 }
 
 function preregister() {
@@ -96,6 +116,31 @@ function register(credentialInfo, userId) {
 }
 
 function authenticate(credential) {
-    // FIXME 還沒做
-    console.info(credential);
+    $.ajax({
+        url: '/fido/authenticate',
+        headers: {'Content-Type': 'application/json'},
+        method: 'post',
+        data: JSON.stringify({
+            id: credential.id,
+            rawId: arrayBufferToBase64Url(credential.rawId),
+            response: {
+                clientDataJSON: arrayBufferToBase64Url(credential.response.clientDataJSON),
+                authenticatorData: arrayBufferToBase64Url(credential.response.authenticatorData),
+                signature: arrayBufferToBase64Url(credential.response.signature)
+            },
+            type: credential.type,
+            username: $('#username').val()
+        }),
+        success: response => {
+            if (response.code === '200' && response.data.status === 'ok') {
+                alert('登入成功');
+            } else {
+                alert(`登入失敗，錯誤代碼：${response.data.code}，錯誤訊息：${response.data.errorMessage}`)
+            }
+        },
+        error: error => {
+            alert('發生未知錯誤，請查看 log');
+            console.error(error);
+        }
+    });
 }

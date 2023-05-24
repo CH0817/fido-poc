@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import tw.com.rex.fido.exception.FidoServerException;
 import tw.com.rex.fido.properties.FidoServerProperties;
 import tw.com.rex.fido.util.FidoRestTemplate;
+import tw.com.rex.fido.web.controller.request.AuthenticateRequest;
 import tw.com.rex.fido.web.controller.request.PreauthenticateRequest;
 import tw.com.rex.fido.web.controller.request.PreregisterRequest;
 import tw.com.rex.fido.web.controller.request.RegisterRequest;
@@ -51,13 +52,17 @@ public class FidoController {
 
     @PostMapping("/preauthenticate")
     public BaseResponse<CredentialsGet> preauthenticate(@RequestBody PreauthenticateRequest request) throws JsonProcessingException {
+        log.debug("FIDO server preauthenticate request: {}", objectMapper.writeValueAsString(request));
         PreauthenticateResponse preauthenticateResponse = sendRequest(fidoServerProperties.preauthenticateUrl(), request, PreauthenticateResponse.class);
+        log.debug("FIDO server preauthenticate response: {}", objectMapper.writeValueAsString(request));
         return BaseResponse.success(new CredentialsGet(preauthenticateResponse));
     }
 
     @PostMapping("/authenticate")
-    public BaseResponse<AuthenticateResponse> authenticate(@RequestBody PreauthenticateRequest request) throws JsonProcessingException {
+    public BaseResponse<AuthenticateResponse> authenticate(@RequestBody AuthenticateRequest request) throws JsonProcessingException {
+        log.debug("FIDO server authenticate request: {}", objectMapper.writeValueAsString(request));
         AuthenticateResponse authenticateResponse = sendRequest(fidoServerProperties.authenticateUrl(), request, AuthenticateResponse.class);
+        log.debug("FIDO server authenticate response: {}", objectMapper.writeValueAsString(authenticateResponse));
         return BaseResponse.success(authenticateResponse);
     }
 

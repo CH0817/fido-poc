@@ -16,3 +16,6 @@ fido:
   headers:
     rp_domain_id: 7
     Protocol: FIDO2_0
+logging:
+  level:
+    tw.com.rex.fido: debug

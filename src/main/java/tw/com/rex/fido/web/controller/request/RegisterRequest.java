@@ -9,7 +9,7 @@ public class RegisterRequest {
     private Response response;
     private String type;
     private String username;
-    private String userId;
+    private String userid;
 //    private String authenticatorAttachment;
 
     @Data

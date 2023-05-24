@@ -27,7 +27,7 @@ public class FidoServerErrorHandler implements ResponseErrorHandler {
     public void handleError(ClientHttpResponse response) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         String responseBody = responseBodyToString(response.getBody());
-        log.error("FIDO Server 回傳錯誤訊息: [{}]", responseBody);
+        log.error("FIDO Server 回傳錯誤訊息: {}", responseBody);
         RegisterResponse registerResponse = objectMapper.readValue(responseBody, RegisterResponse.class);
         throw new FidoServerException(registerResponse);
     }

@@ -14,5 +14,5 @@ spring:
 fido:
   url:  https://tws-fido.wisecure-tech.com:8443
   headers:
-    rp_domain_id: 1
+    rp_domain_id: 7
     Protocol: FIDO2_0

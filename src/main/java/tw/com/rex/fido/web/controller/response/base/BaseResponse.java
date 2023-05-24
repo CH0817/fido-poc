@@ -8,7 +8,6 @@ import lombok.Data;
 public class BaseResponse<T> {
 
     private String code;
-    private String message;
     private T data;
 
     private BaseResponse() {
@@ -22,10 +21,10 @@ public class BaseResponse<T> {
         return  result;
     }
 
-    public static BaseResponse<?> fail(String code, String message) {
-        BaseResponse<?> result = new BaseResponse<>();
-        result.setCode(code);
-        result.setMessage(message);
+    public static <T> BaseResponse<T> fail(T data) {
+        BaseResponse<T> result = new BaseResponse<>();
+        result.setCode("500");
+        result.setData(data);
         return  result;
     }
 

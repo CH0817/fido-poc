@@ -35,15 +35,17 @@ public class FidoController {
 
     @PostMapping(value = "/preregister", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     public BaseResponse<CredentialsCreate> preregister(@Validated @RequestBody PreregisterRequest request) throws JsonProcessingException {
+        log.info("FIDO server preregister request: {}", objectMapper.writeValueAsString(request));
         PreregisterResponse preregisterResponse = sendRequest(fidoServerProperties.preregisterUrl(), request, PreregisterResponse.class);
-        log.info("FIDO server preregister response: {}", preregisterResponse);
+        log.info("FIDO server preregister response: {}", objectMapper.writeValueAsString(preregisterResponse));
         return BaseResponse.success(new CredentialsCreate(preregisterResponse));
     }
 
     @PostMapping(value = "/register", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     public BaseResponse<RegisterResponse> register(@RequestBody RegisterRequest request) throws JsonProcessingException {
+        log.info("FIDO server register request: {}", objectMapper.writeValueAsString(request));
         RegisterResponse registerResponse = sendRequest(fidoServerProperties.registerUrl(), request, RegisterResponse.class);
-        log.info("FIDO server register response: {}", registerResponse);
+        log.info("FIDO server register response: {}", objectMapper.writeValueAsString(registerResponse));
         return BaseResponse.success(registerResponse);
     }
 
@@ -75,9 +77,9 @@ public class FidoController {
     }
 
     @ExceptionHandler(FidoServerException.class)
-    public BaseResponse<?> fidoServerExceptionHandler(FidoServerException e) {
+    public BaseResponse<RegisterResponse> fidoServerExceptionHandler(FidoServerException e) {
         log.error("FidoServerException 錯誤處理", e);
-        return BaseResponse.fail(e.getErrorCode(), e.getErrorMessage());
+        return BaseResponse.fail(e.getRegisterResponse());
     }
 
 }

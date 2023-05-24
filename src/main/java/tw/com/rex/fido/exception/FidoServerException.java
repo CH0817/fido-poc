@@ -10,12 +10,10 @@ public class FidoServerException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    private String errorCode;
-    private String errorMessage;
+    private RegisterResponse registerResponse;
 
     public FidoServerException(RegisterResponse registerResponse) {
         super("FIDO server 發生錯誤");
-        this.errorCode = registerResponse.getCode();
-        this.errorMessage = registerResponse.getErrorMessage();
+        this.registerResponse = registerResponse;
     }
 }
